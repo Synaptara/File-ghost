@@ -85,6 +85,7 @@ const Documentation = () => {
           <aside className="docs-sidebar">
             <div className="sidebar-group">
               <span className="group-header">Briefing</span>
+              {/* Internal Anchor Links (Do not use handleNav here to preserve scrolling) */}
               <a href="#intro" className="sidebar-link active">
                 <Ghost size={14} /> The Mission
               </a>

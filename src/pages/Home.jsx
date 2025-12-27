@@ -8,7 +8,6 @@ import {
   ChevronDown,
   Folder,
   Plus,
-  ChevronDown as ChevronDownSm,
   Calendar,
   ShieldCheck,
   Server,
@@ -24,25 +23,185 @@ import {
   Database,
   Lock,
   Key,
+  Smile,
+  Sun,
+  Flashlight,
+  Ghost,
+  Bot,
+  FileCode,
+  AlertTriangle,
+  ExternalLink,
 } from "lucide-react";
 import "../styles/global.css";
 
 const Home = () => {
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+
+  // --- CONFIGURATION ---
+  const GITHUB_URL = "https://github.com/Synaptara"; // REPLACE THIS
+
+  // --- STATE MANAGEMENT ---
+  const [lightsOutMode, setLightsOutMode] = useState(false); // The "Punishment" view
+  const [warnedOnce, setWarnedOnce] = useState(false); // Tracks moon clicks
+
+  // Unified Modal State to handle different humor scenarios
+  // Structure: { type: string, title: string, message: string, icon: Component, buttonText: string, action: function }
+  const [activeModal, setActiveModal] = useState(null);
 
   const scrollToUpload = () => {
     const uploadSection = document.getElementById("upload-zone");
     uploadSection?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Helper for smooth navigation
   const handleNav = (path) => (e) => {
     e.preventDefault();
     navigate(path);
     window.scrollTo(0, 0);
   };
 
+  const closeModal = () => setActiveModal(null);
+
+  // --- HUMOR HANDLERS ---
+
+  // 1. Moon/Dark Mode Logic
+  const handleMoonClick = () => {
+    if (!warnedOnce) {
+      // First Warning
+      setWarnedOnce(true);
+      setActiveModal({
+        type: "WARNING",
+        title: "Whoa there, Night Owl!",
+        message:
+          "This app is already in Dark Mode. If it gets any darker, you'll need military-grade night vision goggles to read the text.",
+        icon: <Moon size={32} color="#fbbf24" />,
+        buttonText: "I understand, keep it spooky",
+        action: closeModal,
+      });
+    } else {
+      // Punishment
+      setLightsOutMode(true);
+      closeModal();
+    }
+  };
+
+  // 2. CLI Logic
+  const handleCliClick = (e) => {
+    e.preventDefault();
+    setActiveModal({
+      type: "COMEDY",
+      title: "Whoa, Mr. Robot.",
+      message:
+        "We don't actually have a CLI yet. Real hackers just stare at the matrix code until it makes sense. Just type furiously on your keyboard to look busy.",
+      icon: <Terminal size={32} color="#10b981" />,
+      buttonText: "I'll pretend I'm hacking",
+      action: closeModal,
+    });
+  };
+
+  // 3. API Reference Logic
+  const handleApiClick = (e) => {
+    e.preventDefault();
+    setActiveModal({
+      type: "COMEDY",
+      title: "404: Motivation Not Found",
+      message:
+        "The API documentation is currently written in invisible ink on a napkin somewhere. It's very secure. Even we can't read it.",
+      icon: <FileCode size={32} color="#f472b6" />,
+      buttonText: "I'll wait for the napkin",
+      action: closeModal,
+    });
+  };
+
+  // 4. Social Bait & Switch (Twitter/Disc -> GitHub)
+  const handleSocialBait = (e) => {
+    e.preventDefault();
+    setActiveModal({
+      type: "REDIRECT",
+      title: "Wait, this isn't Social Media...",
+      message:
+        "You really thought I have a social life? Ha! I just write code. You were looking for my work anyway, weren't you? Here is the real treasure.",
+      icon: <Ghost size={32} color="#a78bfa" />,
+      buttonText: "Fine, take me to GitHub",
+      action: () => {
+        window.open(GITHUB_URL, "_blank");
+        closeModal();
+      },
+    });
+  };
+
+  // --- VIEW: LIGHTS OUT MODE (The Consequence) ---
+  if (lightsOutMode) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          width: "100vw",
+          background: "#000000",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#333",
+          textAlign: "center",
+          padding: "20px",
+          zIndex: 99999,
+          position: "fixed",
+          top: 0,
+          left: 0,
+        }}
+      >
+        <div style={{ marginBottom: "20px" }}>
+          <Flashlight size={48} color="#444" />
+        </div>
+        <h1 style={{ fontSize: "2rem", color: "#222", marginBottom: "10px" }}>
+          Happy now?
+        </h1>
+        <p style={{ maxWidth: "500px", fontSize: "1.1rem", lineHeight: 1.6 }}>
+          You wanted "Darker". You ignored the warning. <br />
+          Welcome to <strong>Advanced Darkness</strong>.
+        </p>
+        <p
+          style={{
+            marginTop: "20px",
+            fontStyle: "italic",
+            fontSize: "0.9rem",
+            color: "#1a1a1a",
+          }}
+        >
+          (Good luck finding your files in this void.)
+        </p>
+
+        <button
+          onClick={() => setLightsOutMode(false)}
+          style={{
+            marginTop: "60px",
+            background: "transparent",
+            border: "1px solid #333",
+            color: "#444",
+            padding: "12px 24px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.borderColor = "#fff";
+            e.target.style.color = "#fff";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.borderColor = "#333";
+            e.target.style.color = "#444";
+          }}
+        >
+          <Sun size={18} /> I regret my decisions. Turn lights on.
+        </button>
+      </div>
+    );
+  }
+
+  // --- VIEW: NORMAL SITE ---
   return (
     <div className="full-screen-wrapper">
       <div className="bg-grid-pattern"></div>
@@ -80,7 +239,7 @@ const Home = () => {
             </div>
             <div className="nav-right">
               <a
-                href="https://github.com/your-repo"
+                href={GITHUB_URL}
                 target="_blank"
                 className="github-pill"
                 rel="noreferrer"
@@ -91,7 +250,12 @@ const Home = () => {
               </a>
               <div className="divider-vertical"></div>
               <div className="nav-icon-group">
-                <button className="icon-btn">
+                {/* --- THE TRAP BUTTON --- */}
+                <button
+                  className="icon-btn"
+                  onClick={handleMoonClick}
+                  title={warnedOnce ? "Don't push it..." : "Dark Mode"}
+                >
                   <Moon size={18} />
                 </button>
               </div>
@@ -159,13 +323,33 @@ const Home = () => {
             </div>
           </div>
 
-          {/* 3. ENCRYPTION ZONE (TERMINAL STYLE) */}
-          <section className="upload-section" id="upload-zone">
-            <div className="section-label-center">
+          {/* 3. ENCRYPTION ZONE */}
+          <section
+            className="upload-section"
+            id="upload-zone"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+              padding: "80px 24px",
+            }}
+          >
+            <div
+              className="section-label-center"
+              style={{ marginBottom: "32px" }}
+            >
               <span className="label-text">Encryption Zone</span>
             </div>
 
-            <div className="terminal-window">
+            <div
+              className="terminal-window"
+              style={{
+                width: "100%",
+                maxWidth: "800px",
+                margin: "0 auto",
+              }}
+            >
               <div className="terminal-bar">
                 <div className="window-dots">
                   <div className="dot red"></div>
@@ -177,12 +361,30 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="terminal-body">
-                <div className="terminal-content-wrapper">
+              <div
+                className="terminal-body"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "60px 20px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  className="terminal-content-wrapper"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "24px",
+                  }}
+                >
                   <div className="encrypt-icon-large">
                     <Lock size={32} color="#fff" />
                   </div>
-                  <div className="text-center">
+                  <div>
                     <h2 className="encrypt-heading">Initialize Encryption</h2>
                     <p className="encrypt-sub">
                       Establishing secure AES-256 GCM session. <br />
@@ -211,13 +413,11 @@ const Home = () => {
 
             {/* Pipeline Wrapper */}
             <div className="pipeline-wrapper">
-              {/* Connecting Chain */}
               <div className="pipeline-track">
                 <div className="pipeline-beam"></div>
               </div>
 
               <div className="cards-grid pipeline-grid">
-                {/* Card 1 */}
                 <div className="ui-card pipeline-card">
                   <div className="card-visual">
                     <div className="visual-shield">
@@ -230,7 +430,6 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Card 2 */}
                 <div className="ui-card pipeline-card">
                   <div className="card-visual">
                     <div className="visual-network">
@@ -244,7 +443,6 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Card 3 */}
                 <div className="ui-card pipeline-card">
                   <div className="card-visual">
                     <div className="visual-server">
@@ -257,7 +455,6 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Card 4 */}
                 <div className="ui-card pipeline-card">
                   <div className="card-visual">
                     <div className="visual-key">
@@ -285,13 +482,29 @@ const Home = () => {
                     <span className="nav-brand">FileGhost</span>
                   </div>
                   <div className="social-links">
-                    <a href="#" className="social-icon">
+                    {/* SOCIAL BAIT: Clicking Twitter triggers humor + Github Link */}
+                    <a
+                      href="#"
+                      className="social-icon"
+                      onClick={handleSocialBait}
+                    >
                       <Twitter size={16} />
                     </a>
-                    <a href="#" className="social-icon">
+                    {/* GENUINE GITHUB LINK */}
+                    <a
+                      href={GITHUB_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="social-icon"
+                    >
                       <Github size={16} />
                     </a>
-                    <a href="#" className="social-icon">
+                    {/* SOCIAL BAIT: Clicking Disc triggers humor + Github Link */}
+                    <a
+                      href="#"
+                      className="social-icon"
+                      onClick={handleSocialBait}
+                    >
                       <Disc size={16} />
                     </a>
                   </div>
@@ -305,14 +518,20 @@ const Home = () => {
                     <a href="/encryption" onClick={handleNav("/encryption")}>
                       Security
                     </a>
-                    <a href="#">CLI</a>
+                    {/* CLI HUMOR TRIGGER */}
+                    <a href="#" onClick={handleCliClick}>
+                      CLI
+                    </a>
                   </div>
                   <div className="footer-col">
                     <h4>Resources</h4>
                     <a href="/docs" onClick={handleNav("/docs")}>
                       Documentation
                     </a>
-                    <a href="#">API Reference</a>
+                    {/* API HUMOR TRIGGER */}
+                    <a href="#" onClick={handleApiClick}>
+                      API Reference
+                    </a>
                   </div>
                   <div className="footer-col">
                     <h4>Legal</h4>
@@ -342,86 +561,87 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- MODAL --- */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-container">
-            <div className="modal-header">
-              <h3>Create a new project</h3>
-              <button className="btn-close" onClick={() => setShowModal(false)}>
-                <X size={20} />
-              </button>
+      {/* --- UNIFIED HUMOR MODAL --- */}
+      {activeModal && (
+        <div
+          className="modal-overlay"
+          onClick={closeModal}
+          style={{ backdropFilter: "blur(5px)" }}
+        >
+          <div
+            className="modal-container"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: "400px",
+              textAlign: "center",
+              alignItems: "center",
+            }}
+          >
+            {/* Dynamic Header with Icon */}
+            <div
+              className="modal-header"
+              style={{
+                justifyContent: "center",
+                border: "none",
+                paddingBottom: 0,
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  width: "64px",
+                  height: "64px",
+                  background: "rgba(255,255,255,0.05)",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: "16px",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                {activeModal.icon}
+              </div>
             </div>
-            <p className="modal-subtitle">
-              Drag and drop files to create a new project.
+
+            <h3
+              style={{
+                fontSize: "20px",
+                marginBottom: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              {activeModal.title}
+            </h3>
+
+            <p
+              className="modal-subtitle"
+              style={{
+                marginBottom: "20px",
+                color: "#a1a1aa",
+                lineHeight: "1.5",
+              }}
+            >
+              {activeModal.message}
             </p>
 
-            <div className="modal-drop-zone">
-              <Folder size={48} color="#52525b" />
-              <p className="drop-title-modal">Upload an image or video</p>
-              <p className="drop-subtitle-modal">
-                or, click to browse (4 MB max)
-              </p>
-            </div>
-
-            <div className="modal-form-row">
-              <div className="form-group">
-                <label>Project name</label>
-                <input
-                  type="text"
-                  className="modal-input"
-                  defaultValue="Ollie's Project"
-                />
-              </div>
-              <div className="form-group">
-                <label>Team</label>
-                <div className="modal-select">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <div className="team-avatar">W</div>
-                    <span>Watchtower</span>
-                  </div>
-                  <ChevronDownSm size={16} />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="label-row">
-                <label>Add tags (optional)</label>
-                <span className="label-hint">20 tags remaining</span>
-              </div>
-              <div className="tags-input-container">
-                <input
-                  type="text"
-                  className="tags-input"
-                  placeholder="Type to search..."
-                />
-              </div>
-              <div className="tags-list">
-                <span className="tag-badge">
-                  <Plus size={12} /> Web Design
-                </span>
-                <span className="tag-badge">
-                  <Plus size={12} /> UI Design
-                </span>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button className="btn-secondary">Save as draft</button>
-              <div className="footer-right">
-                <button className="btn-secondary">
-                  <Calendar size={16} /> Schedule
-                </button>
-                <button className="btn-primary-modal">Share now</button>
-              </div>
-            </div>
+            <button
+              className="btn-primary-modal"
+              onClick={activeModal.action}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+            >
+              {activeModal.type === "REDIRECT" && <ExternalLink size={16} />}
+              {activeModal.buttonText}
+            </button>
           </div>
         </div>
       )}
