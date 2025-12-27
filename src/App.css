@@ -1,0 +1,64 @@
+/* Import Inter Font - The Vercel Standard */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  /* Vercel Dark Theme Palette */
+  --geist-background: #000000;
+  --geist-foreground: #ffffff;
+  --accents-1: #111;
+  --accents-2: #333;
+  --accents-3: #444;
+  --accents-4: #666;
+  --accents-5: #888;
+  --accents-6: #999;
+  --accents-7: #eaeaea;
+  --accents-8: #fafafa;
+  --geist-success: #0070f3; /* Vercel Blue */
+  --geist-purple: #7928ca;
+  --geist-cyan: #50e3c2;
+  --geist-error: #e00;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  background-color: var(--geist-background);
+  color: var(--geist-foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- The Vercel Grid Background Effect --- */
+.hero-wrapper {
+  position: relative;
+  /* Grid Lines */
+  background-image: linear-gradient(var(--accents-2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accents-2) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center top;
+  /* Fade out the grid at the bottom */
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  padding-bottom: 100px;
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to bottom right, #fff 50%, #999 100%);
+}
+
+.text-gradient-blue {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(90deg, #007cf0, #00dfd8);
+}
